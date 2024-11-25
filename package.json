@@ -2,7 +2,9 @@
   "name": "itranslides-websocket",
   "version": "1.0.0",
   "main": "websocket-server.js",
+  "type": "module",
   "scripts": {
+    "dev": "node --watch ./server/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
