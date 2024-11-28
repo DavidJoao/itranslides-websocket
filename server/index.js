@@ -16,13 +16,11 @@ const io = new Server(server, {
 app.use(express.json());
 
 
+const presentations = {};
+const users = {};
 
 io.on("connection", socket => {
 	console.log("A client connected:", socket.id)
-
-	socket.on("disconnect", () => {
-		console.log("Client disconnected:", socket.id)
-	})
 
     socket.on("new presentation", () => {
         io.emit("New Presentation")
@@ -31,6 +29,45 @@ io.on("connection", socket => {
     socket.on("delete presentation", () => {
         io.emit("Delete Presentation")
     })
+    
+    socket.on("new slide", () => {
+        io.emit("New Slide")
+    })
+
+    socket.on("delete slide", () => {
+        io.emit("Delete Slide")
+    })
+
+    socket.on("slide change", () => {
+        io.emit("Slide Change")
+    })
+
+    socket.on("join presentation", ({ user, presentationId }) => {
+        if (!users[presentationId]) {
+			users[presentationId] = []
+		}
+        const userExists = users[presentationId].some((u) => u._id === user._id);
+        if (!userExists) {
+            users[presentationId].push(user);
+        }
+        io.emit("update users", users[presentationId]);
+    }); 
+
+    socket.on("leave presentation", ({ user, presentationId }) => {
+        if (users[presentationId]) {
+            users[presentationId] = users[presentationId].filter((u) => u._id !== user._id);
+            io.emit("update users", users[presentationId]);
+        }
+        socket.leave(presentationId);
+    });
+
+    socket.on("disconnect", () => {
+        console.log("A user disconnected", socket.id);
+        for (const [presentationId, userList] of Object.entries(users)) {
+            users[presentationId] = userList.filter((u) => u.socketId !== socket.id);
+            io.to(presentationId).emit("update users", users[presentationId]);
+        }
+    });
 })
 
 app.get("/", (req, res) => {
