@@ -7,7 +7,7 @@ const app = express();
 const server = createServer(app);
 const io = new Server(server, {
     cors: {
-        origin: "https://itranslides.vercel.app/",
+        origin: "https://itranslides.vercel.app",
         methods: ["GET", "POST"],
     },
 });
