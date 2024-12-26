@@ -60,6 +60,10 @@ io.on("connection", socket => {
         socket.leave(presentationId);
     });
 
+    socket.on("update comments", async () => {
+        io.emit("Update Comments")
+    })
+
     socket.on("disconnect", () => {
         console.log("A user disconnected", socket.id);
         for (const [presentationId, userList] of Object.entries(users)) {
