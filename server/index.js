@@ -7,7 +7,7 @@ const app = express();
 const server = createServer(app);
 const io = new Server(server, {
     cors: {
-        origin: ["https://itranslides.vercel.app", "http://localhost:3000"],
+        origin: ["https://itranslides.vercel.app", "http://localhost:3000", "https://itransition-coursep.vercel.app"],
         methods: ["GET", "POST"],
     },
 });
