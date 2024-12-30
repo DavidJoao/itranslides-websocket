@@ -64,6 +64,14 @@ io.on("connection", socket => {
         io.emit("Update Comments")
     })
 
+    socket.on("liked template", async () => {
+        io.emit("Liked Template")
+    })
+
+    socket.on("question updated", async () => {
+        io.emit("Question Updated")
+    })
+
     socket.on("disconnect", () => {
         console.log("A user disconnected", socket.id);
         for (const [presentationId, userList] of Object.entries(users)) {
